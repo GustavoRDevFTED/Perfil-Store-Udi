@@ -1,0 +1,14 @@
+
+# Ambiente Python
+.venv/
+Perfil_Store_Site/.venv/
+
+# Arquivos temporários
+__pycache__/
+*.pyc
+
+# Variáveis e senhas
+.env
+
+# Configurações locais
+.DS_Store
