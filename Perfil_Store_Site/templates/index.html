@@ -1,0 +1,284 @@
+
+{% extends "base.html" %}
+
+{% block title %}ATELIER — Vista sua essência{% endblock %}
+
+{% block content %}
+
+<!-- HERO -->
+<section class="hero" aria-labelledby="heroTitle">
+
+    <div class="hero-copy">
+
+        <p class="eyebrow">A NOVA FORMA DE VESTIR</p>
+
+        <h1 id="heroTitle">
+            Menos excesso.<br>
+            <em>Mais essência.</em>
+        </h1>
+
+        <p class="hero-description">
+            Peças que traduzem personalidade. Uma curadoria contemporânea
+            para acompanhar você em todos os momentos.
+        </p>
+
+        <a class="button button-dark" href="#colecao">
+            EXPLORAR COLEÇÃO
+            <span aria-hidden="true">↗</span>
+        </a>
+
+        <div class="hero-index">
+            <span>01</span>
+            <span class="index-line"></span>
+            <span>03</span>
+        </div>
+
+    </div>
+
+    <div class="hero-visual">
+
+        <div class="hero-image-placeholder">
+            <span class="placeholder-mark">A.</span>
+            <span class="placeholder-caption">IMAGEM DA CAMPANHA</span>
+            <span class="placeholder-hint">
+                Sua fotografia principal entrará aqui
+            </span>
+        </div>
+
+        <div class="hero-side-note">
+            ESTILO ATEMPORAL · EDIÇÃO 001
+        </div>
+
+    </div>
+
+    <div class="hero-bottom-note">
+        DESIGN COM INTENÇÃO. FEITO PARA DURAR.
+    </div>
+
+</section>
+
+
+<!-- INTRODUÇÃO -->
+<section class="intro-strip" id="sobre">
+
+    <p>
+        UMA CURADORIA DE <strong>FORMAS, TEXTURAS</strong>
+        <br class="desktop-break">
+        E DETALHES QUE FALAM POR SI.
+    </p>
+
+    <span>01 — 03</span>
+
+</section>
+
+
+<!-- CATEGORIAS -->
+<section class="category-links section-wrap" id="categorias">
+
+    <div class="section-heading">
+
+        <div>
+            <p class="eyebrow">EXPLORE POR CATEGORIA</p>
+            <h2>Encontre seu <em>estilo.</em></h2>
+        </div>
+
+        <span class="category-section-note">
+            SELEÇÃO ATUAL
+        </span>
+
+    </div>
+
+    <div class="category-tile-grid">
+
+        {% for item in nav_categories %}
+
+        <a
+            class="category-tile category-tile-{{ loop.index }}"
+            href="{{ url_for('category', slug=item.slug) }}"
+        >
+
+            <span class="tile-number">
+                {{ "%02d"|format(loop.index) }}
+            </span>
+
+            <span class="tile-title">
+                {{ item.name }}
+            </span>
+
+            <span class="tile-arrow">↗</span>
+
+        </a>
+
+        {% endfor %}
+
+    </div>
+
+</section>
+
+
+<!-- COLEÇÃO -->
+<section class="collection section-wrap" id="colecao">
+
+    <div class="section-heading">
+
+        <div>
+            <p class="eyebrow">ESCOLHAS DA TEMPORADA</p>
+            <h2>Feito para <em>ser seu.</em></h2>
+        </div>
+
+        <a class="text-link" href="#categorias">
+            VER TODA A COLEÇÃO
+            <span>↗</span>
+        </a>
+
+    </div>
+
+
+    <div class="product-grid" id="productGrid">
+
+        {% for product in products %}
+
+        <article class="product-card">
+
+            <a
+                class="product-image"
+                href="{{ url_for('category', slug='camisetas') }}"
+                aria-label="Ver {{ product.name }}"
+            >
+
+                {% if product.tag %}
+
+                <span class="product-tag">
+                    {{ product.tag }}
+                </span>
+
+                {% endif %}
+
+                <div class="product-placeholder">
+
+                    <span class="placeholder-mark">A.</span>
+
+                    <small>
+                        FOTO DO PRODUTO {{ "%02d"|format(loop.index) }}
+                    </small>
+
+                </div>
+
+            </a>
+
+            <button
+                class="quick-add"
+                type="button"
+                data-product="{{ product.name }}"
+                aria-label="Adicionar {{ product.name }} à sacola"
+            >
+                +
+            </button>
+
+            <div class="product-info">
+
+                <div>
+                    <h3>{{ product.name }}</h3>
+                    <p>{{ product.category }}</p>
+                </div>
+
+                <span class="product-price">
+                    {{ product.price }}
+                </span>
+
+            </div>
+
+        </article>
+
+        {% else %}
+
+        <p class="empty-products">
+            Nenhum produto disponível no momento.
+        </p>
+
+        {% endfor %}
+
+    </div>
+
+    <p class="catalog-note">
+        Produtos e valores ilustrativos — aguardando as fotos e informações da coleção.
+    </p>
+
+</section>
+
+
+<!-- EDITORIAL -->
+<section class="editorial" id="novidades">
+
+    <div class="editorial-image">
+
+        <span class="placeholder-mark">A.</span>
+
+        <small>IMAGEM EDITORIAL / CAMPANHA</small>
+
+    </div>
+
+    <div class="editorial-copy">
+
+        <p class="eyebrow">A BELEZA DO ESSENCIAL</p>
+
+        <h2>
+            Seu estilo.<br>
+            <em>Suas regras.</em>
+        </h2>
+
+        <p>
+            Acreditamos em escolhas conscientes, design cuidadoso
+            e peças que permanecem relevantes além das tendências.
+        </p>
+
+        <a class="text-link" href="#colecao">
+            DESCUBRA A MARCA
+            <span>↗</span>
+        </a>
+
+    </div>
+
+</section>
+
+
+<!-- NEWSLETTER -->
+<section class="newsletter section-wrap">
+
+    <p class="eyebrow">FIQUE POR DENTRO</p>
+
+    <h2>
+        Novidades, sem <em>excesso.</em>
+    </h2>
+
+    <p>
+        Receba lançamentos e conteúdos selecionados diretamente no seu e-mail.
+    </p>
+
+    <form class="newsletter-form" id="newsletterForm">
+
+        <label class="sr-only" for="email">
+            Seu e-mail
+        </label>
+
+        <input
+            id="email"
+            type="email"
+            placeholder="Seu melhor e-mail"
+            required
+        >
+
+        <button type="submit" aria-label="Cadastrar e-mail">
+            CADASTRAR
+            <span>↗</span>
+        </button>
+
+    </form>
+
+    <small id="newsletterMessage" role="status">
+        Ao se cadastrar, você concorda em receber novidades da marca.
+    </small>
+
+</section>
+
+{% endblock %}

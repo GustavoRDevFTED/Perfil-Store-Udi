@@ -1,0 +1,506 @@
+
+{% extends "base.html" %}
+
+{% block title %}{{ category.name }} — ATELIER{% endblock %}
+
+{% block content %}
+
+<div class="category-page">
+
+    <!-- Breadcrumb -->
+    <div class="category-breadcrumb">
+        <a href="{{ url_for('home') }}">INÍCIO</a>
+        <span>/</span>
+        <span>{{ category.name|upper }}</span>
+    </div>
+
+    <!-- Introdução da categoria -->
+    <section class="category-intro">
+        <p class="eyebrow">ATELIER — COLEÇÃO</p>
+
+        <h1>
+            {{ category.name }}<span>.</span>
+        </h1>
+
+        <p>{{ category.description }}</p>
+    </section>
+
+    <!-- Barra de ferramentas -->
+    <div class="catalog-toolbar">
+
+        <button
+            class="filter-mobile-toggle"
+            id="filterMobileToggle"
+            type="button"
+            aria-expanded="false"
+            aria-controls="filterSidebar"
+        >
+            <span>Filtros</span>
+            <span aria-hidden="true">☷</span>
+        </button>
+
+        <p class="catalog-count">
+            <strong id="visibleCount">{{ products|length }}</strong>
+            produtos
+        </p>
+
+        <label class="sort-control">
+            <span>Ordenar por</span>
+
+            <select id="sortSelect" aria-label="Ordenar produtos">
+                <option value="relevance">Relevância</option>
+                <option value="newest">Lançamentos</option>
+                <option value="discount">Maior desconto</option>
+                <option value="price-asc">Menor preço</option>
+                <option value="price-desc">Maior preço</option>
+            </select>
+        </label>
+
+    </div>
+
+    <!-- Layout do catálogo -->
+    <div class="catalog-layout">
+
+        <!-- Filtros -->
+        <aside class="filter-sidebar" id="filterSidebar">
+
+            <div class="filter-sidebar-heading">
+                <h2>Filtros</h2>
+
+                <button type="button" id="clearFilters">
+                    Limpar
+                </button>
+            </div>
+
+            <!-- Tamanho -->
+            {% if has_size_filter %}
+
+            <details class="filter-group" open>
+                <summary>Tamanho</summary>
+
+                <div class="size-options">
+
+                    {% for size in sizes %}
+
+                    <label class="size-option">
+                        <input
+                            type="checkbox"
+                            name="size"
+                            value="{{ size }}"
+                        >
+
+                        <span>{{ size }}</span>
+                    </label>
+
+                    {% endfor %}
+
+                </div>
+            </details>
+
+            {% endif %}
+
+            <!-- Cor -->
+            <details class="filter-group" open>
+                <summary>Cor</summary>
+
+                <div class="color-options">
+
+                    {% for color in colors %}
+
+                    <label
+                        class="color-option"
+                        title="{{ color.name }}"
+                    >
+                        <input
+                            type="checkbox"
+                            name="color"
+                            value="{{ color.name }}"
+                        >
+
+                        <span
+                            class="color-swatch"
+                            style="--swatch: {{ color.hex }}"
+                        ></span>
+
+                        <small>{{ color.name }}</small>
+                    </label>
+
+                    {% endfor %}
+
+                </div>
+            </details>
+
+            <!-- Preço -->
+            <details class="filter-group" open>
+                <summary>Preço</summary>
+
+                <div class="price-options">
+
+                    <label>
+                        <input type="checkbox" name="price" value="0-100">
+                        <span>Até R$ 100</span>
+                    </label>
+
+                    <label>
+                        <input type="checkbox" name="price" value="100-200">
+                        <span>R$ 100 - R$ 200</span>
+                    </label>
+
+                    <label>
+                        <input type="checkbox" name="price" value="200-300">
+                        <span>R$ 200 - R$ 300</span>
+                    </label>
+
+                    <label>
+                        <input type="checkbox" name="price" value="300-400">
+                        <span>R$ 300 - R$ 400</span>
+                    </label>
+
+                    <label>
+                        <input type="checkbox" name="price" value="400-500">
+                        <span>R$ 400 - R$ 500</span>
+                    </label>
+
+                    <label>
+                        <input type="checkbox" name="price" value="500+">
+                        <span>Acima de R$ 500</span>
+                    </label>
+
+                </div>
+            </details>
+
+        </aside>
+
+        <!-- Catálogo de produtos -->
+        <section
+            class="category-products"
+            aria-label="Produtos da categoria"
+        >
+
+            <div
+                class="product-grid category-product-grid"
+                id="categoryProductGrid"
+            >
+
+                {% for product in products %}
+
+                <article
+                    class="product-card"
+                    data-price="{{ product.price }}"
+                    data-color="{{ product.color }}"
+                    data-sizes="{{ product.sizes|join(',') }}"
+                    data-discount="{{ product.discount }}"
+                    data-new="{{ 'true' if product.is_new else 'false' }}"
+                >
+
+                    <!-- Imagem e acesso ao produto -->
+                    <a
+                        class="product-image"
+                        href="{{
+                            url_for('product_detail', slug=product.slug)
+                            if product.slug else '#'
+                        }}"
+                        aria-label="Ver {{ product.name }}"
+                    >
+
+                        {% if product.tag %}
+
+                        <span class="product-tag">
+                            {{ product.tag }}
+                        </span>
+
+                        {% endif %}
+
+                        {% if product.image %}
+
+                        <img
+                            class="product-photo"
+                            src="{{ url_for('static', filename=product.image) }}"
+                            alt="{{ product.name }} - Frente"
+                            loading="lazy"
+                        >
+
+                        {% else %}
+
+                        <div class="product-placeholder">
+                            <span class="placeholder-mark">A.</span>
+
+                            <small>
+                                FOTO DO PRODUTO {{ "%02d"|format(loop.index) }}
+                            </small>
+                        </div>
+
+                        {% endif %}
+
+                    </a>
+
+                    <!-- Adicionar à sacola -->
+                    <button
+                        class="quick-add"
+                        type="button"
+                        data-product="{{ product.name }}"
+                        aria-label="Adicionar {{ product.name }} à sacola"
+                    >
+                        +
+                    </button>
+
+                    <!-- Informações -->
+                    <div class="product-info">
+
+                        <div>
+                            <h3>{{ product.name }}</h3>
+
+                            <p>
+                                {{ product.color }} · {{ category.name }}
+                            </p>
+                        </div>
+
+                        <span class="product-price">
+                            {{ product.price_label }}
+                        </span>
+
+                    </div>
+
+                </article>
+
+                {% else %}
+
+                <p class="empty-products">
+                    Nenhum produto cadastrado nesta categoria.
+                </p>
+
+                {% endfor %}
+
+            </div>
+
+            <!-- Nenhum resultado -->
+            <p
+                class="empty-products"
+                id="emptyProducts"
+                hidden
+            >
+                Nenhum produto encontrado com os filtros selecionados.
+            </p>
+
+            <p class="catalog-note">
+                Conheça nossa seleção de peças ATELIER.
+            </p>
+
+        </section>
+
+    </div>
+
+</div>
+
+{% endblock %}
+
+
+{% block extra_js %}
+
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+
+    const productGrid = document.getElementById("categoryProductGrid");
+
+    if (!productGrid) return;
+
+    const products = Array.from(
+        productGrid.querySelectorAll(".product-card")
+    );
+
+    const visibleCount = document.getElementById("visibleCount");
+    const emptyProducts = document.getElementById("emptyProducts");
+    const sortSelect = document.getElementById("sortSelect");
+    const clearFilters = document.getElementById("clearFilters");
+    const filterSidebar = document.getElementById("filterSidebar");
+    const filterMobileToggle = document.getElementById("filterMobileToggle");
+
+    const filterInputs = document.querySelectorAll(
+        '.filter-sidebar input[type="checkbox"]'
+    );
+
+    function getSelectedValues(name) {
+
+        return Array.from(
+            document.querySelectorAll(
+                `input[name="${name}"]:checked`
+            )
+        ).map(input => input.value);
+
+    }
+
+    function getPrice(product) {
+
+        return Number(product.dataset.price || 0);
+
+    }
+
+    function matchesPrice(price, ranges) {
+
+        if (ranges.length === 0) return true;
+
+        return ranges.some(range => {
+
+            if (range === "500+") {
+                return price >= 500;
+            }
+
+            const [min, max] = range.split("-").map(Number);
+
+            return price >= min && price <= max;
+
+        });
+
+    }
+
+    function applyFilters() {
+
+        const selectedSizes = getSelectedValues("size");
+        const selectedColors = getSelectedValues("color");
+        const selectedPrices = getSelectedValues("price");
+
+        let visibleProducts = 0;
+
+        products.forEach(product => {
+
+            const productPrice = getPrice(product);
+            const productColor = product.dataset.color || "";
+
+            const productSizes = (
+                product.dataset.sizes || ""
+            ).split(",").map(size => size.trim());
+
+            const matchesSize =
+                selectedSizes.length === 0 ||
+                selectedSizes.some(size => productSizes.includes(size));
+
+            const matchesColor =
+                selectedColors.length === 0 ||
+                selectedColors.includes(productColor);
+
+            const matchesProductPrice = matchesPrice(
+                productPrice,
+                selectedPrices
+            );
+
+            const isVisible =
+                matchesSize &&
+                matchesColor &&
+                matchesProductPrice;
+
+            product.hidden = !isVisible;
+
+            if (isVisible) {
+                visibleProducts++;
+            }
+
+        });
+
+        if (visibleCount) {
+            visibleCount.textContent = visibleProducts;
+        }
+
+        if (emptyProducts) {
+            emptyProducts.hidden = visibleProducts !== 0;
+        }
+
+    }
+
+    function sortProducts() {
+
+        if (!sortSelect) return;
+
+        const sortValue = sortSelect.value;
+        const sortedProducts = [...products];
+
+        sortedProducts.sort((a, b) => {
+
+            const priceA = getPrice(a);
+            const priceB = getPrice(b);
+
+            const discountA = Number(a.dataset.discount || 0);
+            const discountB = Number(b.dataset.discount || 0);
+
+            const newA = a.dataset.new === "true";
+            const newB = b.dataset.new === "true";
+
+            switch (sortValue) {
+
+                case "newest":
+                    return Number(newB) - Number(newA);
+
+                case "discount":
+                    return discountB - discountA;
+
+                case "price-asc":
+                    return priceA - priceB;
+
+                case "price-desc":
+                    return priceB - priceA;
+
+                default:
+                    return 0;
+
+            }
+
+        });
+
+        sortedProducts.forEach(product => {
+            productGrid.appendChild(product);
+        });
+
+        applyFilters();
+
+    }
+
+    // Aplicar filtros
+    filterInputs.forEach(input => {
+        input.addEventListener("change", applyFilters);
+    });
+
+    // Ordenar produtos
+    if (sortSelect) {
+        sortSelect.addEventListener("change", sortProducts);
+    }
+
+    // Limpar filtros
+    if (clearFilters) {
+
+        clearFilters.addEventListener("click", function () {
+
+            filterInputs.forEach(input => {
+                input.checked = false;
+            });
+
+            if (sortSelect) {
+                sortSelect.value = "relevance";
+            }
+
+            sortProducts();
+
+        });
+
+    }
+
+    // Menu de filtros mobile
+    if (filterMobileToggle && filterSidebar) {
+
+        filterMobileToggle.addEventListener("click", function () {
+
+            const isOpen = filterSidebar.classList.toggle("open");
+
+            filterMobileToggle.setAttribute(
+                "aria-expanded",
+                String(isOpen)
+            );
+
+        });
+
+    }
+
+    applyFilters();
+
+});
+</script>
+
+{% endblock %}

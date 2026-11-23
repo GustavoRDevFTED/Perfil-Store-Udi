@@ -1,0 +1,410 @@
+
+{% extends "base.html" %}
+
+{% block title %}{{ product.name }} — ATELIER{% endblock %}
+
+{% block content %}
+
+<main class="product-detail-page">
+
+    <nav class="product-breadcrumb">
+        <a href="{{ url_for('home') }}">INÍCIO</a>
+        <span>/</span>
+        <a href="{{ url_for('category', slug='camisetas') }}">CAMISETAS</a>
+        <span>/</span>
+        <span>{{ product.name | upper }}</span>
+    </nav>
+
+    <section class="product-detail">
+
+        <!-- Galeria de imagens -->
+        <div class="product-gallery">
+
+            <div class="product-thumbnails">
+
+                {% for image in product.images %}
+
+                <button
+                    type="button"
+                    class="product-thumbnail {% if loop.first %}active{% endif %}"
+                    data-image="{{ url_for('static', filename=image.src) }}"
+                    aria-label="Visualizar {{ image.label }}"
+                    aria-pressed="{{ 'true' if loop.first else 'false' }}"
+                >
+                    <img
+                        src="{{ url_for('static', filename=image.src) }}"
+                        alt="{{ image.alt }}"
+                    >
+                </button>
+
+                {% endfor %}
+
+            </div>
+
+            <div class="product-main-image">
+
+                {% if product.images %}
+
+                <img
+                    id="mainProductImage"
+                    src="{{ url_for('static', filename=product.images[0].src) }}"
+                    alt="{{ product.images[0].alt }}"
+                >
+
+                {% else %}
+
+                <div class="product-image-placeholder">
+                    <span>A.</span>
+                </div>
+
+                {% endif %}
+
+                {% if product.tag %}
+                <span class="product-detail-tag">
+                    {{ product.tag }}
+                </span>
+                {% endif %}
+
+            </div>
+
+        </div>
+
+        <!-- Informações do produto -->
+        <div class="product-detail-info">
+
+            <p class="product-detail-eyebrow">
+                ATELIER — COLEÇÃO
+            </p>
+
+            <h1>{{ product.name }}</h1>
+
+            <p class="product-detail-category">
+                {{ product.category }} · {{ product.color }}
+            </p>
+
+            <div class="product-detail-price">
+                {{ product.price_label }}
+            </div>
+
+            <p class="product-installment">
+                Consulte as condições de pagamento.
+            </p>
+
+            <div class="product-detail-divider"></div>
+
+            <!-- Seleção de tamanho -->
+            {% if product.sizes %}
+
+            <div class="product-size-section">
+
+                <div class="product-size-heading">
+                    <span>TAMANHO</span>
+                    <span id="selectedSizeLabel">
+                        Selecione um tamanho
+                    </span>
+                </div>
+
+                <div class="product-size-options">
+
+                    {% for size in product.sizes %}
+
+                    <button
+                        type="button"
+                        class="product-size-button"
+                        data-size="{{ size }}"
+                        aria-pressed="false"
+                    >
+                        {{ size }}
+                    </button>
+
+                    {% endfor %}
+
+                </div>
+
+                <p
+                    class="product-size-error"
+                    id="sizeError"
+                    hidden
+                >
+                    Selecione um tamanho para continuar.
+                </p>
+
+            </div>
+
+            {% endif %}
+
+            <!-- Botão de compra -->
+            <button
+                type="button"
+                class="product-add-button"
+                id="addProductButton"
+            >
+                ADICIONAR À SACOLA
+            </button>
+
+            <!-- Descrição -->
+            <p class="product-detail-description">
+                Uma peça essencial para composições versáteis.
+                Design minimalista e personalidade em cada detalhe.
+            </p>
+
+            <!-- Informações adicionais -->
+            <div class="product-extra-information">
+
+                <details>
+                    <summary>Descrição do produto</summary>
+
+                    <p>
+                        Camiseta branca A|X, com visual minimalista
+                        e versátil para diferentes ocasiões.
+                    </p>
+                </details>
+
+                <details>
+                    <summary>Entrega e devoluções</summary>
+
+                    <p>
+                        Consulte as condições de entrega e devolução
+                        disponíveis para sua região.
+                    </p>
+                </details>
+
+            </div>
+
+        </div>
+
+    </section>
+
+</main>
+
+{% endblock %}
+
+
+{% block extra_js %}
+
+<!-- Dados do produto fornecidos pelo Flask -->
+<script id="product-data" type="application/json">
+{{ {
+    "slug": product.slug,
+    "name": product.name,
+    "price": product.price
+} | tojson }}
+</script>
+
+
+<script>
+
+document.addEventListener("DOMContentLoaded", function () {
+
+    // =====================================
+    // DADOS DO PRODUTO
+    // =====================================
+
+    const productElement = document.getElementById("product-data");
+
+    let productInfo = {};
+
+    try {
+
+        productInfo = JSON.parse(productElement.textContent);
+
+    } catch (error) {
+
+        console.error("Erro ao carregar os dados do produto.");
+
+        return;
+
+    }
+
+
+    // =====================================
+    // GALERIA DE IMAGENS
+    // =====================================
+
+    const mainImage = document.getElementById("mainProductImage");
+
+    const thumbnails = document.querySelectorAll(".product-thumbnail");
+
+    thumbnails.forEach(function (thumbnail) {
+
+        thumbnail.addEventListener("click", function () {
+
+            if (!mainImage) {
+                return;
+            }
+
+            const imageUrl = thumbnail.getAttribute("data-image");
+
+            const thumbnailImage = thumbnail.querySelector("img");
+
+            if (!imageUrl || !thumbnailImage) {
+                return;
+            }
+
+            mainImage.src = imageUrl;
+            mainImage.alt = thumbnailImage.alt;
+
+            thumbnails.forEach(function (item) {
+
+                item.classList.remove("active");
+                item.setAttribute("aria-pressed", "false");
+
+            });
+
+            thumbnail.classList.add("active");
+            thumbnail.setAttribute("aria-pressed", "true");
+
+        });
+
+    });
+
+
+    // =====================================
+    // SELEÇÃO DE TAMANHO
+    // =====================================
+
+    const sizeButtons = document.querySelectorAll(".product-size-button");
+
+    const sizeLabel = document.getElementById("selectedSizeLabel");
+
+    const sizeError = document.getElementById("sizeError");
+
+    let selectedSize = null;
+
+    sizeButtons.forEach(function (button) {
+
+        button.addEventListener("click", function () {
+
+            sizeButtons.forEach(function (item) {
+
+                item.classList.remove("selected");
+
+                item.setAttribute("aria-pressed", "false");
+
+            });
+
+            button.classList.add("selected");
+
+            button.setAttribute("aria-pressed", "true");
+
+            selectedSize = button.dataset.size;
+
+            if (sizeLabel) {
+
+                sizeLabel.textContent = "Tamanho " + selectedSize;
+
+            }
+
+            if (sizeError) {
+
+                sizeError.hidden = true;
+
+            }
+
+        });
+
+    });
+
+
+    // =====================================
+    // ADICIONAR À SACOLA
+    // =====================================
+
+    const addButton = document.getElementById("addProductButton");
+
+    if (!addButton) {
+        return;
+    }
+
+    addButton.addEventListener("click", function () {
+
+        // Verifica o tamanho selecionado
+        if (sizeButtons.length > 0 && !selectedSize) {
+
+            if (sizeError) {
+                sizeError.hidden = false;
+            }
+
+            return;
+
+        }
+
+
+        // Monta os dados do produto
+        const productData = {
+            slug: productInfo.slug,
+            name: productInfo.name,
+            price: productInfo.price,
+            size: selectedSize
+        };
+
+
+        // Recupera os produtos da sacola
+        let cart = [];
+
+        try {
+
+            const savedCart = localStorage.getItem("atelier_cart");
+
+            if (savedCart) {
+
+                const parsedCart = JSON.parse(savedCart);
+
+                if (Array.isArray(parsedCart)) {
+                    cart = parsedCart;
+                }
+
+            }
+
+        } catch (error) {
+
+            alert("Não foi possível carregar sua sacola.");
+
+            return;
+
+        }
+
+
+        // Adiciona o produto
+        cart.push(productData);
+
+
+        // Salva no navegador
+        try {
+
+            localStorage.setItem(
+                "atelier_cart",
+                JSON.stringify(cart)
+            );
+
+        } catch (error) {
+
+            alert("Não foi possível adicionar o produto à sacola.");
+
+            return;
+
+        }
+
+
+        // Atualiza o botão
+        addButton.textContent = "ADICIONADO À SACOLA ✓";
+
+        addButton.disabled = true;
+
+
+        // Restaura o botão
+        setTimeout(function () {
+
+            addButton.textContent = "ADICIONAR À SACOLA";
+
+            addButton.disabled = false;
+
+        }, 2000);
+
+    });
+
+});
+
+</script>
+
+{% endblock %}

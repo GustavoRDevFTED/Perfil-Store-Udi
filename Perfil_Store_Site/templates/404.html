@@ -1,0 +1,10 @@
+{% extends "base.html" %}
+{% block title %}Página não encontrada — ATELIER{% endblock %}
+{% block content %}
+<section class="not-found">
+  <p class="eyebrow">ERRO 404</p>
+  <h1>Este caminho não existe<em>.</em></h1>
+  <p>Talvez a página tenha mudado. Volte à página inicial para continuar explorando.</p>
+  <a class="button button-dark" href="{{ url_for('home') }}">VOLTAR AO INÍCIO <span>↗</span></a>
+</section>
+{% endblock %}

@@ -1,0 +1,334 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <meta name="description"
+        content="ATELIER — Uma curadoria contemporânea de roupas, acessórios e perfumaria. Menos excesso. Mais essência.">
+
+    <meta name="theme-color" content="#f8f7f4">
+
+    <title>{% block title %}ATELIER — Vista sua essência{% endblock %}</title>
+
+    <!-- Fontes -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+    <link
+        href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:ital,wght@0,400;0,500;0,600;1,400;1,500&display=swap"
+        rel="stylesheet">
+
+    <!-- CSS principal -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+
+    {% block extra_css %}{% endblock %}
+</head>
+
+<body>
+
+    <!-- Barra de anúncio -->
+    <div class="announcement-bar">
+        <p>
+            ATELIER COLLECTION
+            <span>—</span>
+            MENOS EXCESSO. MAIS ESSÊNCIA.
+        </p>
+    </div>
+
+    <!-- Cabeçalho -->
+    <header class="site-header">
+
+        <div class="header-inner">
+
+            <!-- Menu mobile -->
+            <button type="button" class="menu-toggle" id="menuToggle" aria-label="Abrir menu" aria-expanded="false"
+                aria-controls="mainNav">
+                <span></span>
+                <span></span>
+            </button>
+
+            <!-- Logo -->
+            <a href="{{ url_for('home') }}" class="brand-logo" aria-label="ATELIER - Página inicial">
+                ATELIER<span>.</span>
+            </a>
+
+            <!-- Navegação -->
+            <nav class="main-nav" id="mainNav" aria-label="Navegação principal">
+
+                <a href="{{ url_for('home') }}" class="nav-link">
+                    Início
+                </a>
+
+                <a href="{{ url_for('home') }}#novidades" class="nav-link">
+                    Novidades
+                </a>
+
+                <a href="{{ url_for('home') }}#colecao" class="nav-link">
+                    Coleção
+                </a>
+
+                <!-- Mega menu -->
+                <div class="mega-dropdown" id="megaDropdown">
+
+                    <button type="button" class="mega-trigger" id="megaTrigger" aria-expanded="false"
+                        aria-controls="megaMenu">
+                        Categorias
+                    </button>
+
+                    <div class="mega-menu" id="megaMenu">
+
+                        <div class="mega-menu-content">
+
+                            <!-- Roupas -->
+                            <div class="mega-column">
+
+                                <h3>Roupas</h3>
+
+                                <a href="{{ url_for('category', slug='camisetas') }}">
+                                    Camisetas
+                                </a>
+
+                                <a href="{{ url_for('category', slug='camisas') }}">
+                                    Camisas
+                                </a>
+
+                                <a href="{{ url_for('category', slug='calcas') }}">
+                                    Calças
+                                </a>
+
+                                <a href="{{ url_for('category', slug='bermudas') }}">
+                                    Bermudas
+                                </a>
+
+                            </div>
+
+                            <!-- Acessórios -->
+                            <div class="mega-column">
+
+                                <h3>Acessórios</h3>
+
+                                <a href="{{ url_for('category', slug='bones') }}">
+                                    Bonés
+                                </a>
+
+                            </div>
+
+                            <!-- Perfumaria -->
+                            <div class="mega-column">
+
+                                <h3>Perfumaria</h3>
+
+                                <a href="{{ url_for('category', slug='perfumes') }}">
+                                    Perfumes
+                                </a>
+
+                            </div>
+
+                            <!-- Destaque editorial -->
+                            <div class="mega-column mega-feature">
+
+                                <span class="eyebrow">
+                                    ATELIER COLLECTION
+                                </span>
+
+                                <h3>
+                                    Menos excesso.<br>
+                                    Mais essência.
+                                </h3>
+
+                                <a href="{{ url_for('home') }}#colecao" class="mega-feature-link">
+                                    EXPLORAR COLEÇÃO ↗
+                                </a>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+                <a href="{{ url_for('home') }}#sobre" class="nav-link">
+                    Nossa essência
+                </a>
+
+            </nav>
+
+            <!-- Ações do cabeçalho -->
+            <div class="header-actions">
+
+                <button type="button" class="header-action search-trigger" id="searchToggle"
+                    aria-label="Pesquisar produtos">
+                    <svg viewBox="0 0 24 24" width="21" height="21" fill="none" stroke="currentColor" stroke-width="1.5"
+                        stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                        <circle cx="11" cy="11" r="7"></circle>
+                        <path d="m16 16 4 4"></path>
+                    </svg>
+                </button>
+
+                <a href="#" class="header-action cart-link" id="cartLink" aria-label="Sacola de compras">
+                    <svg viewBox="0 0 24 24" width="21" height="21" fill="none" stroke="currentColor" stroke-width="1.5"
+                        stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                        <path d="M5 8h14l1 13H4L5 8Z"></path>
+                        <path d="M9 8V6a3 3 0 0 1 6 0v2"></path>
+                    </svg>
+
+                    <span class="cart-count" id="cartCount">
+                        0
+                    </span>
+                </a>
+
+            </div>
+
+        </div>
+
+        <!-- Pesquisa -->
+        <div class="search-panel" id="searchPanel">
+
+            <form action="{{ url_for('home') }}" method="GET" class="search-form">
+
+                <input type="search" name="q" id="searchInput" placeholder="O que você está procurando?"
+                    aria-label="Pesquisar produtos">
+
+                <button type="submit">
+                    PESQUISAR ↗
+                </button>
+
+            </form>
+
+        </div>
+
+    </header>
+
+    <!-- Conteúdo específico de cada página -->
+    <main id="mainContent">
+
+        {% block content %}
+        {% endblock %}
+
+    </main>
+
+    <!-- Rodapé -->
+    <footer class="site-footer">
+
+        <div class="footer-main">
+
+            <div class="footer-brand">
+
+                <a href="{{ url_for('home') }}" class="footer-logo">
+                    ATELIER<span>.</span>
+                </a>
+
+                <p>
+                    Menos excesso. Mais essência.
+                </p>
+
+                <span class="footer-description">
+                    Uma curadoria contemporânea para quem valoriza
+                    autenticidade, personalidade e estilo.
+                </span>
+
+            </div>
+
+            <div class="footer-column">
+
+                <h3>EXPLORE</h3>
+
+                <a href="{{ url_for('home') }}">INÍCIO</a>
+
+                <a href="{{ url_for('home') }}#colecao">
+                    Coleção
+                </a>
+
+                <a href="{{ url_for('home') }}#novidades">
+                    Novidades
+                </a>
+
+                <a href="{{ url_for('home') }}#sobre">
+                    Nossa essência
+                </a>
+
+            </div>
+
+            <div class="footer-column">
+
+                <h3>CATEGORIAS</h3>
+
+                <a href="{{ url_for('category', slug='camisetas') }}">
+                    Camisetas
+                </a>
+
+                <a href="{{ url_for('category', slug='camisas') }}">
+                    Camisas
+                </a>
+
+                <a href="{{ url_for('category', slug='calcas') }}">
+                    Calças
+                </a>
+
+                <a href="{{ url_for('category', slug='bermudas') }}">
+                    Bermudas
+                </a>
+
+                <a href="{{ url_for('category', slug='bones') }}">
+                    Bonés
+                </a>
+
+                <a href="{{ url_for('category', slug='perfumes') }}">
+                    Perfumes
+                </a>
+
+            </div>
+
+            <div class="footer-column">
+
+                <h3>ATENDIMENTO</h3>
+
+                <a href="mailto:contato@atelier.com.br">
+                    Fale conosco
+                </a>
+
+                <a href="#">
+                    Entrega e envio
+                </a>
+
+                <a href="#">
+                    Trocas e devoluções
+                </a>
+
+                <a href="#">
+                    Política de privacidade
+                </a>
+
+            </div>
+
+        </div>
+
+        <div class="footer-bottom">
+
+            <p>
+                © {{ current_year if current_year is defined else '2026' }}
+                ATELIER. TODOS OS DIREITOS RESERVADOS.
+            </p>
+
+            <span>
+                FEITO COM INTENÇÃO.
+            </span>
+
+        </div>
+
+    </footer>
+
+    <!-- Notificação -->
+    <div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+    <!-- JavaScript principal -->
+    <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+
+    {% block extra_js %}{% endblock %}
+
+</body>
+
+</html>
