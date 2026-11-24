@@ -27,7 +27,8 @@ CATEGORIES = {
             "Camiseta Azul Boss",
             "Camiseta Vermelha Boss",
             "Camiseta Vermelha Ralph Lauren",
-            "Camiseta Cinza Armani"
+            "Camiseta Cinza Armani",
+            "Camiseta Bege Colcci"
         ]
     },
     "camisas": {
@@ -706,6 +707,49 @@ def create_products(category_data, category_slug):
             "image": None,
             "images": []
         })
+        
+        # =====================================
+        # CAMISA POLO ESSENTIAL BRANCA
+        # =====================================
+
+        if category_slug == "camisas" and index == 1:
+
+            price = 100.00
+
+            images = [
+                {
+                    "src": "images/products/camisa-polo-essential-branca-p-frente.png",
+                    "alt": "Camisa Polo Essential Branca - Frente",
+                    "label": "Frente"
+                },
+                {
+                    "src": "images/products/camisa-polo-essential-branca-p-costas.png",
+                    "alt": "Camisa Polo Essential Branca - Costas",
+                    "label": "Costas"
+                },
+                {
+                    "src": "images/products/camisa-polo-essential-branca-p-detalhe.png",
+                    "alt": "Camisa Polo Essential Branca - Detalhe da manga",
+                    "label": "Detalhe"
+                }
+            ]   
+
+            products.append({
+                "slug": "camisa-polo-essential-branca-p",
+                "name": "Camisa Polo Essential Branca",
+                "category": category_data["name"],
+                "price": price,
+                "price_label": format_price(price),
+                "color": "Branco",
+                "sizes": category_data["sizes"],
+                "discount": 0,
+                "is_new": True,
+                "tag": "NOVO",
+                "image": images[0]["src"],
+                "images": images
+            })
+
+            continue
 
     return products
 
