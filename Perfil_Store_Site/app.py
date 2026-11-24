@@ -688,10 +688,10 @@ def create_products(category_data, category_slug):
             continue
         
         # =====================================
-        # CAMISA COLCCI BEGE
+        # CAMISETA COLCCI BEGE
         # =====================================
         
-        if category_slug == "camisas" and index == 15:
+        if category_slug == "camisetas" and index == 15:
         
             price = 100.00
             
@@ -709,12 +709,12 @@ def create_products(category_data, category_slug):
             ]   
         
             products.append({
-                "slug": "camisa-polo-essential-branca-p",
-                "name": "Camisa Polo Essential Branca",
+                "slug": "camiseta-colcci-bege-p",
+                "name": "Camiseta Colcci Bege",
                 "category": category_data["name"],
                 "price": price,
                 "price_label": format_price(price),
-                "color": "Branco",
+                "color": "Bege",
                 "sizes": category_data["sizes"],
                 "discount": 0,
                 "is_new": True,
