@@ -709,29 +709,24 @@ def create_products(category_data, category_slug):
         })
         
         # =====================================
-        # CAMISA POLO ESSENTIAL BRANCA
+        # CAMISA COLCCI BEGE
         # =====================================
 
-        if category_slug == "camisas" and index == 1:
+        if category_slug == "camisas" and index == 15:
 
             price = 100.00
 
             images = [
                 {
-                    "src": "images/products/camisa-polo-essential-branca-p-frente.png",
-                    "alt": "Camisa Polo Essential Branca - Frente",
+                    "src": "images/products/camiseta-bege-colcci-p-frente.png",
+                    "alt": "Camiseta Colcci Bege - Frente",
                     "label": "Frente"
                 },
                 {
-                    "src": "images/products/camisa-polo-essential-branca-p-costas.png",
-                    "alt": "Camisa Polo Essential Branca - Costas",
+                    "src": "images/products/camiseta-bege-colcci-p-costas.png",
+                    "alt": "Camiseta Colcci Bege - Costas",
                     "label": "Costas"
                 },
-                {
-                    "src": "images/products/camisa-polo-essential-branca-p-detalhe.png",
-                    "alt": "Camisa Polo Essential Branca - Detalhe da manga",
-                    "label": "Detalhe"
-                }
             ]   
 
             products.append({
